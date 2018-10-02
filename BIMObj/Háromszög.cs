@@ -6,7 +6,7 @@ namespace BIMObj
 {
     public static class Háromszög
     {
-        public static byte IsContainsTri(int[] input)
+        public static byte IsContainsTri1(int[] input)
         {
             var arrSize = input.Length -1;
 
@@ -16,7 +16,6 @@ namespace BIMObj
                 {
                     for (int middle = leftSide + 1; middle < rightSide; middle++)
                     {
-                        Console.WriteLine($"Rota: {input[leftSide]},{input[rightSide]},{input[middle]}");
                         if (CheckConstraints(input[leftSide], input[rightSide], input[middle]))
                         {
                             Console.WriteLine($"Found: {input[leftSide]},{input[rightSide]},{input[middle]}");
@@ -29,7 +28,60 @@ namespace BIMObj
             return 0;
         }
 
-        private static bool CheckConstraints(int i, int j, int k)
+        public static byte IsContainsTri2(int[] input)
+        {
+            if (input.Length < 3) { return 255; };
+
+            Array.Sort(input);
+            var arrSize = input.Length - 1;
+
+            int midPoint = arrSize / 2;
+
+            //bool midFloatBool;
+            //int midFloatDiff;
+
+            Console.WriteLine($"{ input.Length} .. { arrSize}");
+
+            for (int outer = 0; outer < arrSize - 2; outer++)
+            {
+
+                for (int inner = outer + 1; inner < arrSize -1; inner++)
+                {
+                    for (int scan = inner + 1; input[scan] < (input[inner] + input[outer] - 1); scan++)
+                    {
+                        if (CheckConstraints(input[outer], input[inner], input[scan]))
+                        {
+                            Console.WriteLine($"Found2: {input[outer]},{input[inner]},{input[scan]}");
+                            return 1;
+                        }
+                    }
+
+
+                }
+
+            }
+
+
+
+
+            return 0;
+        }
+
+        private static int maxValid(int a, int b)
+        {
+            return a + b - 1;
+        }
+
+        private static int minValid(int a,int b)
+        {
+            //TODO: sorozatnál kell az if?
+            if(a > b)
+            { return a - b + 1;  }
+            else
+            { return b - a + 1; }
+        }
+
+        public static bool CheckConstraints(int i, int j, int k)
         {
             if ( i+j > k 
                 && j+k > i 
