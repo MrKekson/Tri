@@ -14,7 +14,7 @@ namespace BIMObj
             Console.WriteLine(Háromszög.IsTriFound(input));
             Console.WriteLine(Háromszög.IsTriFound(input2));
 
-            SingleRunPerfTest();
+            //SingleRunPerfTest();
             Console.Write("Done. Press [enter] to exit.");
             Console.Read();
         }
