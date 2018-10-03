@@ -1,91 +1,100 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BIMObj
 {
     public static class Háromszög
     {
-        public static byte IsContainsTri1(int[] input)
+        public static byte IsTriFound(int[] input)
         {
-            var arrSize = input.Length -1;
-
-            for (int leftSide = 0; leftSide < arrSize - 2; leftSide++)
-            {
-                for (int rightSide = arrSize; rightSide > leftSide + 1; rightSide--)
-                {
-                    for (int middle = leftSide + 1; middle < rightSide; middle++)
-                    {
-                        if (CheckConstraints(input[leftSide], input[rightSide], input[middle]))
-                        {
-                            Console.WriteLine($"Found: {input[leftSide]},{input[rightSide]},{input[middle]}");
-                            return 1;
-                        }
-                    }
-                }
-            }
-
-            return 0;
-        }
-
-        public static byte IsContainsTri2(int[] input)
-        {
-            if (input.Length < 3) { return 255; };
+            if (input.Length < 3) { throw new ArgumentException("Array must be at least 3 element long", input.Length.ToString()); }
 
             Array.Sort(input);
+
             var arrSize = input.Length - 1;
-
-            int midPoint = arrSize / 2;
-
-            //bool midFloatBool;
-            //int midFloatDiff;
-
-            Console.WriteLine($"{ input.Length} .. { arrSize}");
 
             for (int outer = 0; outer < arrSize - 2; outer++)
             {
-
-                for (int inner = outer + 1; inner < arrSize -1; inner++)
+                for (int inner = outer + 1; inner < arrSize - 1; inner++)
                 {
-                    for (int scan = inner + 1; input[scan] < (input[inner] + input[outer] - 1); scan++)
+                    for (int scan = inner + 1;
+                            scan <= arrSize
+                            && input[scan] < (input[inner] + input[outer]);
+                            scan++)
                     {
                         if (CheckConstraints(input[outer], input[inner], input[scan]))
                         {
-                            Console.WriteLine($"Found2: {input[outer]},{input[inner]},{input[scan]}");
                             return 1;
                         }
                     }
-
-
                 }
-
             }
-
-
-
 
             return 0;
         }
 
-        private static int maxValid(int a, int b)
+        public static int CountTri1(int[] input)
         {
-            return a + b - 1;
+            var arrSize = input.Length - 1;
+
+            Array.Sort(input);
+
+            var counter = 0;
+
+            for (int i = 0; i < arrSize - 2; ++i)
+            {
+                for (int j = i + 1; j < arrSize - 1; ++j)
+                {
+                    for (int k = j + 1; k < arrSize; ++k)
+                    {
+                        if (CheckConstraints(input[i], input[j], input[k]))
+                        {
+                            ++counter;
+                            break;
+                        }
+                    }
+                }
+            }
+            Console.WriteLine();
+
+            return counter;
         }
 
-        private static int minValid(int a,int b)
+        public static int CountTri2(int[] input)
         {
-            //TODO: sorozatnál kell az if?
-            if(a > b)
-            { return a - b + 1;  }
-            else
-            { return b - a + 1; }
+            if (input.Length < 3) { return -1; }
+
+            Array.Sort(input);
+
+            var arrSize = input.Length - 1;
+
+            var counter = 0;
+
+            for (int outer = 0; outer < arrSize - 2; outer++)
+            {
+                for (int inner = outer + 1; inner < arrSize - 1; inner++)
+                {
+                    for (int scan = inner + 1;
+                            scan <= arrSize
+                            && input[scan] < (input[inner] + input[outer]);
+                            scan++)
+                    {
+                        if (CheckConstraints(input[outer], input[inner], input[scan]))
+                        {
+                            counter++;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return counter;
         }
 
         public static bool CheckConstraints(int i, int j, int k)
         {
-            if ( i+j > k 
-                && j+k > i 
-                && k+i > j)
+            if (i + j > k
+                && j + k > i
+                && k + i > j)
             {
                 return true;
             }
